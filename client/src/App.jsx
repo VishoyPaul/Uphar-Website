@@ -3,7 +3,8 @@ import './App.css'
 
 const App = () => {
   return (
-    <div className='text-red-400'>App</div>
+    <div className='text-red-400'>App is live</div>
+    
   )
 }
 
