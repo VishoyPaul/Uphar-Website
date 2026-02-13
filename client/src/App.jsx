@@ -1,9 +1,12 @@
 import React from 'react'
 import './App.css'
-
+import Navbar from './components/common/Navbar'
 const App = () => {
   return (
-    <div className='text-red-400'>App</div>
+    <div>
+      <Navbar />
+      
+    </div>
   )
 }
 
