@@ -1,10 +1,11 @@
 import React from 'react'
-import './App.css'
+import LoginForm from './components/auth/LoginForm/LoginForm'
 
 const App = () => {
   return (
-    <div className='text-red-400'>App is live</div>
-    
+    <div class="min-h-screen min-w-screen flex items-center justify-center bg-gradient-to-b from-[#FCA1E8] to-white">
+      <LoginForm/>
+    </div>
   )
 }
 
