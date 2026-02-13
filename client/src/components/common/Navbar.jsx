@@ -15,8 +15,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full">
-      <div className="flex items-center p-4 shadow-xl rounded-4xl relative">
+    <div className="w-full bg">
+      <div className="flex items-center p-4 shadow-xl rounded-4xl relative bg-gradient-to-r from-white via-pink-50  ">
         <div className="h-10 w-10 mx-2 bg-[rgb(253,50,209)] rounded-xl shadow-xl flex justify-center items-center">
           <FaEye className="text-white w-8 h-7" />
         </div>
