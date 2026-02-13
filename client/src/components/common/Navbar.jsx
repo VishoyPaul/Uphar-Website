@@ -10,6 +10,7 @@ import { FaBagShopping } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { GrLogin } from "react-icons/gr";
 
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className=" flex items-center">
+        <div className="ml-auto flex items-center">
           <IoSearchSharp className="text-[#434DA6] text-2xl mx-2" />
           <FaBagShopping className="text-[#434DA6] text-2xl mx-2" />
           <RxHamburgerMenu

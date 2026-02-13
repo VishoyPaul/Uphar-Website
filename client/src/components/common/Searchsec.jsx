@@ -2,7 +2,11 @@ import React from 'react'
 
 const Searchsec = () => {
   return (
-    <div>Searchsec</div>
+    <div>
+      <div>
+        
+      </div>
+    </div>
   )
 }
 
