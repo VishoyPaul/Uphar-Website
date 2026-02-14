@@ -4,6 +4,7 @@ import { IoSearch } from "react-icons/io5";
 import { useState } from 'react';
 import Eyewearcards from '../components/eyewearcard/Eyewearcard';
 import Footer from '../components/footer/Footer';
+import FadingLoader from '../components/loader/FadingLoader';
 const eyewear = () => {
   const [searchTerm, setSearchTerm] = useState([]);
   return (
@@ -23,11 +24,7 @@ const eyewear = () => {
             ))}
            
           </div>) : (
-            <div className='flex items-center justify-center mt-8 text-gray-500 text-lg'>
-              no results found
-              
-  
-            </div>
+           <div className="flex justify-center items-center h-96"><FadingLoader /></div>
             
           )
         }
