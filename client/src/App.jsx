@@ -1,20 +1,21 @@
 import React from 'react'
-import LoginForm from './components/auth/LoginForm/LoginForm'
-import Navbar from './components/common/Navbar'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import About from './about/About'
+import Connectform from './connect/Connectform'
+import Eyewear from './eyewear/Eyewear'
+import HearingAids from './hearingaids/Hearingaids'
 
 const App = () => {
   return (
-    <div className="min-h-screen min-w-screen bg-gradient-to-b from-[#FCA1E8] to-white">
-      {/* Fixed Navbar at top */}
-      <header className="fixed top-0 left-0 right-0 w-full">
-        <Navbar />
-      </header>
-      
-      {/* Main content with padding top to account for fixed navbar */}
-      <main className="flex items-center justify-center min-h-screen pt-20">
-        <LoginForm />
-      </main>
-    </div>
+   <>
+   <Routes>
+
+    <Route path='/eye-wear' element={<Eyewear/>}/>
+    <Route path='/hearing-aids' element={<HearingAids/>}/>
+    <Route path='clinic-services' element={<Connectform/>}/>
+    <Route path='/' element={<About/>}/>
+   </Routes>
+   </>
   )
 }
 
