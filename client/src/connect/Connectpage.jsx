@@ -1,8 +1,9 @@
 import React from "react";
 import { TiTickOutline } from "react-icons/ti";
 import frames from "../image/frames.jpg";
-
+import { useNavigate } from "react-router-dom";
 const Connectpage = () => {
+  const navigate = useNavigate();
   return (
     <>
     <div className="bg-[#434DA6] px-6 py-13 lg:py-20">
@@ -51,7 +52,8 @@ const Connectpage = () => {
           </div>
 
           
-          <div className="mt-8">
+          <div className="mt-8"
+          onClick={() => navigate('/clinic-services')}>
             <button className="bg-[#f422c7] text-[#EBE0FA] px-6 py-3 rounded-lg font-bold hover:scale-105 transition duration-300">
               Book an Appointment
             </button>

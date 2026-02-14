@@ -1,10 +1,13 @@
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-const Explorecard = ({ image, title, description }) => {
+const Explorecard = ({ image, title, description,path }) => {
+  const navigate = useNavigate();
   return (
     <div className="mx-3 mb-8 bg-">
-      <div className="relative h-72 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] rounded-2xl shadow-2xl overflow-hidden">
+      <div onClick={()=>navigate(path)}
+      className="relative h-72 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] rounded-2xl shadow-2xl overflow-hidden">
         <img
           src={image}
           alt={title}

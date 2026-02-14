@@ -11,18 +11,21 @@ const Explorepage = () => {
       title: "Designer Frames",
       description:
         "Curated collection of stylish and trendy frames to elevate your eyewear game.",
+      path:"/eye-wear",
     },
     {
       image: hearing,
       title: "Digital Hearing Aids",
       description:
         "Advanced hearing aids with digital sound processing for enhanced clarity and comfort.",
+      path:"/hearing-aids",
     },
     {
       image: sungoggles,
       title: "Smart Glasses",
       description:
         "Innovative smart glasses with integrated features for seamless connectivity and augmented reality experiences.",
+      path:"/smart-glasses",
     },
   ];
 
@@ -49,6 +52,7 @@ const Explorepage = () => {
             image={item.image}
             title={item.title}
             description={item.description}
+            path={item.path}
           />
         ))}
       </div>

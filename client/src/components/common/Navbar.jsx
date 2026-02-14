@@ -50,7 +50,6 @@ const Navbar = () => {
         </div>
 
         <div className="ml-auto flex items-center">
-          <IoSearchSharp className="text-[#434DA6] text-2xl mx-2" />
           <FaBagShopping className="text-[#434DA6] text-2xl mx-2" />
           <RxHamburgerMenu
             className="text-[#434DA6] text-2xl mx-2 md:hidden"

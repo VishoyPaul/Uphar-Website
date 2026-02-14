@@ -1,7 +1,8 @@
 import React from "react";
 import heroImage from "../image/sungoggles.jpg";
-
+import { useNavigate } from "react-router-dom";
 const Frontpage = () => {
+  const navigate = useNavigate();
   return (
     <section className="w-full min-h-screen bg-gradient-to-bt from-[#f6f3ff] to-[#efeaff]">
       <div className="max-w-7xl mx-auto min-h-screen px-6 md:px-12 flex items-center">
@@ -30,11 +31,11 @@ const Frontpage = () => {
             </p>
 
             <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4">
-              <button className="px-6 py-3 rounded-full bg-pink-500 text-white font-semibold hover:scale-105 transition">
+              <button onClick={() => navigate('/eye-wear')} className="px-6 py-3 rounded-full bg-pink-500 text-white font-semibold hover:scale-105 transition">
                 Shop Eyewear →
               </button>
 
-              <button className="px-6 py-3 rounded-full bg-white text-gray-800 font-semibold border hover:scale-105 transition">
+              <button onClick={() => navigate('/hearing-aids')} className="px-6 py-3 rounded-full bg-white text-gray-800 font-semibold border hover:scale-105 transition">
                 Shop Hearing Aids
               </button>
             </div>
