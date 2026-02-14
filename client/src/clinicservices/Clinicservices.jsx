@@ -1,8 +1,14 @@
 import React from 'react'
+import Navbar from '../components/common/Navbar'
+import Footer from '../components/footer/Footer'
 
 const Clinicservices = () => {
   return (
-    <div>Clinicservices</div>
+    <div>
+      <Navbar />
+      
+      <Footer />
+    </div>
   )
 }
 

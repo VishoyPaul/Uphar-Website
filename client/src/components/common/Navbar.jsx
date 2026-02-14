@@ -50,7 +50,7 @@ const Navbar = () => {
         </div>
 
         <div className="ml-auto flex items-center">
-          <FaBagShopping className="text-[#434DA6] text-2xl mx-2" />
+          <FaBagShopping className="text-[#434DA6] text-2xl mx-2" onClick={()=>navigate("/add-to-cart")}/>
           <RxHamburgerMenu
             className="text-[#434DA6] text-2xl mx-2 md:hidden"
             onClick={() => setIsMenuOpen(true)}
@@ -84,12 +84,12 @@ const Navbar = () => {
             <MobileItem
               icon={<FaInfo />}
               text="About"
-              onClick={() => navigate("/about")}
+              onClick={() => navigate("/")}
             />
             <MobileItem
               icon={<GrLogin />}
               text="Login"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/login-form")}
             />
           </div>
         )}
