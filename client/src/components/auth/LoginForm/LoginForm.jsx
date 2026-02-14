@@ -1,8 +1,10 @@
 import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
+  const navigator = useNavigate();
   const handleGoogleSuccess = (credentialResponse) => {
     console.log('=== GOOGLE LOGIN SUCCESS ===');
     console.log('Credential Response:', credentialResponse);
@@ -14,6 +16,7 @@ const LoginForm = () => {
     console.log('Email:', decoded.email);
     console.log('Picture:', decoded.picture);
     console.log('=== END OF GOOGLE DATA ===');
+    navigator('/');
     
     // You can now send this data to your backend or store in state
     alert(`Welcome ${decoded.name}! Check console for details.`);
@@ -114,7 +117,7 @@ const LoginForm = () => {
         {/* Apple Login Button */}
         <button 
           type="button"
-          className="mt-2.5 w-full h-[50px] rounded-[10px] flex justify-center items-center font-medium gap-2.5 border border-[#ededef] bg-white cursor-pointer transition-all duration-200 ease-in-out hover:border-[#2d79f3]"
+          className="mt-2.5 w-full  h-[50px] rounded-[10px] flex justify-center items-center font-medium gap-2.5 border border-[#ededef] bg-white cursor-pointer transition-all duration-200 ease-in-out hover:border-[#2d79f3]"
         >
           <svg version="1.1" height={20} width={20} id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22.773 22.773" style={{enableBackground: 'new 0 0 22.773 22.773'}} xmlSpace="preserve">
             <g>
