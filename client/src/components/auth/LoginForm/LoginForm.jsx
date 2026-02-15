@@ -1,39 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { googleLoginUser, persistAuth } from '../../../api/api';
 
 const LoginForm = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
   const navigator = useNavigate();
-  const handleGoogleSuccess = (credentialResponse) => {
-    console.log('=== GOOGLE LOGIN SUCCESS ===');
-    console.log('Credential Response:', credentialResponse);
-    
-    // Decode the JWT token to get user information
-    const decoded = jwtDecode(credentialResponse.credential);
-    console.log('Decoded User Info:', decoded);
-    console.log('Name:', decoded.name);
-    console.log('Email:', decoded.email);
-    console.log('Picture:', decoded.picture);
-    console.log('=== END OF GOOGLE DATA ===');
-    navigator('/');
-    
-    // You can now send this data to your backend or store in state
-    alert(`Welcome ${decoded.name}! Check console for details.`);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: true,
+  });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setErrorMessage('');
+      setIsSubmitting(true);
+
+      if (!credentialResponse?.credential) {
+        throw new Error('No Google credential received');
+      }
+
+      const authData = await googleLoginUser({
+        credential: credentialResponse.credential,
+      });
+
+      persistAuth(authData, formData.rememberMe);
+      navigator('/');
+    } catch (error) {
+      setErrorMessage(error?.response?.data?.message || 'Google login failed');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleGoogleError = () => {
-    console.log('Login Failed');
-    alert('Google Login Failed. Please try again.');
+    setErrorMessage('Google Login Failed. Please try again.');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    console.log('=== EMAIL/PASSWORD LOGIN ===');
-    console.log('Email:', formData.get('email'));
-    console.log('Password:', formData.get('password'));
-    console.log('=== END OF LOGIN DATA ===');
+
+    try {
+      setErrorMessage('');
+      setIsSubmitting(true);
+
+      const { data: authData } = await axios.post(`${API_BASE_URL}/auth/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      persistAuth(authData, formData.rememberMe);
+      navigator('/');
+    } catch (error) {
+      setErrorMessage(error?.response?.data?.message || 'Login failed');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -41,17 +75,19 @@ const LoginForm = () => {
       <div className="flex flex-col">
         <label className="text-[#151717] font-semibold">Email </label>
       </div>
-      
+
       <div className="border-[1.5px] border-[#ecedec] rounded-[10px] h-[50px] flex items-center pl-2.5 transition-all duration-200 ease-in-out focus-within:border-[#2d79f3]">
         <svg height={20} viewBox="0 0 32 32" width={20} xmlns="http://www.w3.org/2000/svg">
           <g id="Layer_3" data-name="Layer 3">
             <path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z" />
           </g>
         </svg>
-        <input 
-          type="email" 
+        <input
+          type="email"
           name="email"
-          className="ml-2.5 rounded-[10px] border-none w-[85%] h-full outline-none font-sans" 
+          value={formData.email}
+          onChange={handleChange}
+          className="ml-2.5 rounded-[10px] border-none w-[85%] h-full outline-none font-sans"
           placeholder="Enter your Email"
           required
         />
@@ -65,11 +101,13 @@ const LoginForm = () => {
         <svg height={20} viewBox="-64 0 512 512" width={20} xmlns="http://www.w3.org/2000/svg">
           <path d="m336 512h-288c-26.453125 0-48-21.523438-48-48v-224c0-26.476562 21.546875-48 48-48h288c26.453125 0 48 21.523438 48 48v224c0 26.476562-21.546875 48-48 48zm-288-288c-8.8125 0-16 7.167969-16 16v224c0 8.832031 7.1875 16 16 16h288c8.8125 0 16-7.167969 16-16v-224c0-8.832031-7.1875-16-16-16zm0 0" />
           <path d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0" />
-        </svg>        
-        <input 
+        </svg>
+        <input
           type="password"
-          name="password" 
-          className="ml-2.5 rounded-[10px] border-none w-[85%] h-full outline-none font-sans" 
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          className="ml-2.5 rounded-[10px] border-none w-[85%] h-full outline-none font-sans"
           placeholder="Enter your Password"
           required
         />
@@ -80,46 +118,49 @@ const LoginForm = () => {
 
       <div className="flex flex-row items-center gap-2.5 justify-between">
         <div className="flex items-center gap-1">
-          <input type="checkbox" name="rememberMe" />
+          <input type="checkbox" name="rememberMe" checked={formData.rememberMe} onChange={handleChange} />
           <label className="text-sm text-black font-normal">Remember me </label>
         </div>
         <span className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer">Forgot password?</span>
       </div>
 
-      <button 
+      {errorMessage ? <p className="text-sm text-red-600">{errorMessage}</p> : null}
+
+      <button
         type="submit"
-        className="my-5 mb-2.5 bg-[#151717] border-none text-white text-[15px] font-medium rounded-[10px] h-[50px] w-full cursor-pointer hover:bg-[#252727] transition-colors"
+        disabled={isSubmitting}
+        className="my-5 mb-2.5 bg-[#151717] border-none text-white text-[15px] font-medium rounded-[10px] h-[50px] w-full cursor-pointer hover:bg-[#252727] transition-colors disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Sign In
+        {isSubmitting ? 'Signing In...' : 'Sign In'}
       </button>
 
       <p className="text-center text-black text-sm my-1">
-        Don't have an account? 
-        <span className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer">Sign Up</span>
+        Don&apos;t have an account?
+        <Link to="/signup" className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer">
+          Sign Up
+        </Link>
       </p>
 
       <p className="text-center text-black text-sm my-1">Or With</p>
 
       <div className="flex flex-row items-center gap-2.5 justify-between">
-        {/* Google Login Button */}
-        <div className="mt-2.5 w-full">
+        <div className="mt-2.5 w-full h-[50px] flex items-center justify-center">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
             theme="outline"
             size="large"
-            width="100%"
+            width="190"
             text="signin_with"
             shape="rectangular"
           />
         </div>
 
-        {/* Apple Login Button */}
-        <button 
+        <button
           type="button"
-          className="mt-2.5 w-full  h-[50px] rounded-[10px] flex justify-center items-center font-medium gap-2.5 border border-[#ededef] bg-white cursor-pointer transition-all duration-200 ease-in-out hover:border-[#2d79f3]"
+          className="mt-2.5 w-full h-[50px] rounded-[10px] flex justify-center items-center font-medium gap-2.5 border border-[#ededef] bg-white cursor-pointer transition-all duration-200 ease-in-out hover:border-[#2d79f3]"
         >
-          <svg version="1.1" height={20} width={20} id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22.773 22.773" style={{enableBackground: 'new 0 0 22.773 22.773'}} xmlSpace="preserve">
+          <svg version="1.1" height={20} width={20} id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22.773 22.773" style={{ enableBackground: 'new 0 0 22.773 22.773' }} xmlSpace="preserve">
             <g>
               <g>
                 <path d="M15.769,0c0.053,0,0.106,0,0.162,0c0.13,1.606-0.483,2.806-1.228,3.675c-0.731,0.863-1.732,1.7-3.351,1.573 c-0.108-1.583,0.506-2.694,1.25-3.561C13.292,0.879,14.557,0.16,15.769,0z" />
@@ -127,11 +168,11 @@ const LoginForm = () => {
               </g>
             </g>
           </svg>
-          Apple 
+          Apple
         </button>
       </div>
     </form>
   );
-}
+};
 
 export default LoginForm;

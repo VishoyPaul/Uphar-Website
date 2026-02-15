@@ -35,6 +35,26 @@ const handleAuthError = (res, error, fallbackMessage) => {
   });
 };
 
+const resolveGoogleAuthPayload = (body = {}) => {
+  let googleId = body.googleId || body.sub;
+  let email = body.email;
+  let firstName = body.firstName;
+  let lastName = body.lastName;
+  let profilePicture = body.profilePicture;
+
+  // Fallback for clients that send only Google credential token
+  if ((!googleId || !email) && body.credential) {
+    const decoded = jwt.decode(body.credential) || {};
+    googleId = googleId || decoded.sub;
+    email = email || decoded.email;
+    firstName = firstName || decoded.given_name;
+    lastName = lastName || decoded.family_name;
+    profilePicture = profilePicture || decoded.picture;
+  }
+
+  return { googleId, email, firstName, lastName, profilePicture };
+};
+
 exports.signup = async (req, res) => {
   try {
     const { firstName, lastName, email, mobile, password } = req.body;
@@ -94,27 +114,68 @@ exports.login = async (req, res) => {
 
 exports.googleLogin = async (req, res) => {
   try {
-    const { googleId, email, firstName, lastName, profilePicture } = req.body;
+    const { googleId, email, firstName, lastName, profilePicture } = resolveGoogleAuthPayload(req.body);
     const normalizedEmail = String(email || '').trim().toLowerCase();
-    if (!googleId || !email) {
+
+    if (!normalizedEmail || !googleId) {
       return res.status(400).json({ message: 'googleId and email are required' });
     }
 
-    let user = await User.findOne({ $or: [{ googleId }, { email: normalizedEmail }] });
+    const safeFirstName =
+      String(firstName || '').trim() || normalizedEmail.split('@')[0] || 'Google';
+    const safeLastName = String(lastName || '').trim() || 'User';
+    const safeProfilePicture = String(profilePicture || '').trim();
 
-    if (!user) {
+    const [emailUser, googleUser] = await Promise.all([
+      User.findOne({ email: normalizedEmail }),
+      User.findOne({ googleId })
+    ]);
+
+    let user = emailUser || googleUser;
+
+    if (user) {
+      // Update existing user safely without triggering unique key conflicts.
+      user.firstName = user.firstName || safeFirstName;
+      user.lastName = user.lastName || safeLastName;
+      if (safeProfilePicture) user.profilePicture = safeProfilePicture;
+
+      if (!user.googleId) {
+        const googleIdOwner =
+          googleUser && String(googleUser._id) !== String(user._id) ? googleUser : null;
+        if (!googleIdOwner) {
+          user.googleId = googleId;
+        }
+      }
+
+      await user.save({ validateBeforeSave: false });
+    } else {
       user = await User.create({
-        firstName,
-        lastName,
+        firstName: safeFirstName,
+        lastName: safeLastName,
         email: normalizedEmail,
         googleId,
-        profilePicture
+        profilePicture: safeProfilePicture
       });
     }
 
     const token = generateToken(user._id);
-    res.status(200).json({ token, user: sanitizeUser(user) });
+    return res.status(200).json({ token, user: sanitizeUser(user) });
   } catch (error) {
+    if (error?.code === 11000) {
+      const { googleId, email } = resolveGoogleAuthPayload(req.body);
+      const normalizedEmail = String(email || '').trim().toLowerCase();
+
+      const existingUser = await User.findOne({
+        $or: [{ email: normalizedEmail }, { googleId }]
+      });
+
+      if (existingUser) {
+        const token = generateToken(existingUser._id);
+        return res.status(200).json({ token, user: sanitizeUser(existingUser) });
+      }
+
+      return res.status(409).json({ message: 'Google account conflict. Please try again.' });
+    }
     return handleAuthError(res, error, 'Google login failed');
   }
 };

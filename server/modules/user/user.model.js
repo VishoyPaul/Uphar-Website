@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
       return !this.googleId;
     },
     unique: true,
-    sparse: true
+    sparse: true,
+    default: undefined
   },
   password: {
     type: String,
@@ -32,7 +33,9 @@ const userSchema = new mongoose.Schema({
   },
   googleId: {
     type: String,
-    default: null
+    unique: true,
+    sparse: true,
+    default: undefined
   },
   profilePicture: {
     type: String,

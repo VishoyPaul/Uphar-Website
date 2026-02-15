@@ -22,9 +22,9 @@ const Navbar = () => {
           <FaEye className="text-white w-8 h-7" />
         </div>
 
-        <span className="text-[#434DA6] text-2xl font-bold flex">
+        <a href="/"><span className="text-[#434DA6] text-2xl font-bold flex">
           UPHAR <span className="text-[rgb(229,15,183)] mx-1">OPTICAL</span>
-        </span>
+        </span></a>
 
         <div className="hidden md:flex flex-1 justify-center">
           <div className="flex items-center gap-3">
@@ -45,6 +45,9 @@ const Navbar = () => {
             </span>
             <span onClick={() => navigate("/about")} className="nav-item ml-7 text-[#434DA6]">
               About
+            </span>
+            <span onClick={() => navigate("/login")} className="nav-item ml-7 text-[#434DA6]">
+              Login
             </span>
           </div>
         </div>
@@ -89,7 +92,7 @@ const Navbar = () => {
             <MobileItem
               icon={<GrLogin />}
               text="Login"
-              onClick={() => navigate("/login-form")}
+              onClick={() => navigate('/login')}
             />
           </div>
         )}
