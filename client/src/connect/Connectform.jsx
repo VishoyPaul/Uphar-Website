@@ -64,17 +64,33 @@ const Connectform = () => {
 
         <div className="space-y-2 text-gray-600">
           <p className="leading-relaxed">
-            123 Wellness Street,
+            S-16, Green Park Extn. N.D-16,near Green Park Metro Station,
+            Lift No-2
             <br />
-            Health City, HC 12345
+      
           </p>
 
           <p>
             Phone:
             <span className="ml-1 font-medium text-gray-800">
-              (123) 456-7890
+              9818677773 (sunny) / 921-017-7773
             </span>
           </p>
+
+           <p className="leading-relaxed">
+            Ground Floor, shop No.15 Khasra No.470,<br />
+            village Kishangarh, Near d-4 Main-Road <br/>
+            vasnt Kunj,South Delhi,New delhi -110070
+            <br />
+        
+
+             Phone:
+            <span className="ml-1 font-medium text-gray-800">
+              9910524222
+            </span>
+          </p>
+
+
 
           <p>
             Email:
