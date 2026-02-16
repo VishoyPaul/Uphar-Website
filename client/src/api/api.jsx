@@ -55,3 +55,8 @@ export const getAuthUser = () => {
     localStorage.getItem(AUTH_USER_KEY) || sessionStorage.getItem(AUTH_USER_KEY);
   return raw ? JSON.parse(raw) : null;
 };
+
+export const connectformsubmit= async(payload)=>{
+  const {data}=await api.post('/connectformsubmit',payload);
+  return data;
+}

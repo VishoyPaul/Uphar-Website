@@ -1,8 +1,49 @@
 import React from "react";
-
+import { connectformsubmit } from "../api/api";
+import { useState } from "react";
 const Connectform = () => {
+  const [formData, setFormData] = useState({
+    service: "",
+    date: "",
+    contactNumber: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+  try {
+    e.preventDefault();
+    if (!formData.service) {
+      alert("Please select a service.");
+      return;
+    }
+    if (!formData.date) {
+      alert("Please select a date.");
+      return;
+    }
+    if (!formData.contactNumber) {
+      alert("Please enter your contact number.");
+      return;
+    }
+    console.log("Submitting form with data:", formData);
+    const res= await connectformsubmit(formData)
+    console.log("Form submitted successfully:", res);
+    
+    setFormData({
+      service: "",
+      date: "",
+      contactNumber: "",
+    });
+  } catch (error) {
+    console.error("Error submitting form:", error);
+  }
+
+}
   return (
     <div className="min-h-screen  bg-gray-100 flex flex-col items-center justify-center px-4">
+      <form onSubmit={handleSubmit}>
       <div className="w-full max-w-md mt-9 bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
           Booking Summary
@@ -13,7 +54,12 @@ const Connectform = () => {
 
           <div className="space-y-2">
             <label className="flex items-center gap-3 p-3 border rounded-xl cursor-pointer">
-              <input type="checkbox" className="accent-purple-500" />
+              <input type="checkbox" 
+              value="Eye Check-up"
+              checked={formData.service === "Eye Check-up"}
+              onChange={handleChange}
+              name="service"
+              className="accent-purple-500" />
               <div>
                 <p className="font-semibold">Eye Check-up</p>
                 <p className="text-sm text-gray-500">Comprehensive Screening</p>
@@ -21,7 +67,12 @@ const Connectform = () => {
             </label>
 
             <label className="flex items-center gap-3 p-3 border rounded-xl cursor-pointer">
-              <input type="checkbox" className="accent-purple-500" />
+              <input type="checkbox"
+              value="Hearing Check-up"
+              checked={formData.service === "Hearing Check-up"}
+              onChange={handleChange}
+              name="service"
+               className="accent-purple-500" />
               <div>
                 <p className="font-semibold">Hearing Check-up</p>
                 <p className="text-sm text-gray-500">Hearing Assessment</p>
@@ -38,18 +89,26 @@ const Connectform = () => {
           <div className="space-y-3">
             <input
               type="date"
+              value={formData.date}
+              onChange={handleChange}
+              name="date"
               className="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-400"
             />
 
             <input
               type="number"
               placeholder="Contact Number"
+              value={formData.contactNumber}
+              onChange={handleChange}
+              name="contactNumber"
               className="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-400"
             />
           </div>
         </div>
 
-        <button className="w-full mt-4 bg-purple-500 hover:bg-purple-600 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition">
+        <button 
+        type="submit"
+        className="w-full mt-4 bg-purple-500 hover:bg-purple-600 text-white text-lg font-semibold py-4 rounded-full shadow-lg transition">
           Confirm Appointment
         </button>
 
@@ -58,6 +117,7 @@ const Connectform = () => {
           <p>✔ Sanitized Equipment & Environment</p>
         </div>
       </div>
+      </form>
 
       <div className="mt-12 w-full max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-gray-100 p-6 mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-3">Our Address</h1>

@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var connectdb = require('./config/db')
 var authRoute = require('./routes/auth.route')
+var connect_form_route=require("./modules/connectform/submitform.route")
 
 var app = express();
 
@@ -57,6 +58,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoute);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api',connect_form_route)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
