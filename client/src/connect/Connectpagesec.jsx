@@ -7,7 +7,7 @@ const Connectpagesec = () => {
     <div>
       <Navbar />
       <Connectform />
-      <Footer bgcolor='bg-[#83C0EE]' othercolor='text-[#EBE0FA]' />
+      <Footer/>
     </div>
   )
 }

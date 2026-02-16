@@ -10,6 +10,7 @@ var usersRouter = require('./routes/users');
 var connectdb = require('./config/db')
 var authRoute = require('./routes/auth.route')
 var hearingAidsRoute = require('./routes/hearingaids.route')
+var appointmentsRoute = require('./routes/appointments.route')
 
 var app = express();
 
@@ -57,6 +58,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/auth', authRoute);
 app.use('/api/hearingaids', hearingAidsRoute);
+app.use('/api/appointments', appointmentsRoute);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

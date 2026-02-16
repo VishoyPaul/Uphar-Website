@@ -75,3 +75,13 @@ export const updateHearingAid = async (id, payload) => {
   const { data } = await api.put(`/hearingaids/${id}`, payload);
   return data;
 };
+
+export const createAppointment = async (payload) => {
+  const { data } = await api.post('/appointments', payload);
+  return data;
+};
+
+export const getAppointments = async () => {
+  const { data } = await api.get('/appointments');
+  return data;
+};
