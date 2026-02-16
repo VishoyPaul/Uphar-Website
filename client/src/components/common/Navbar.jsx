@@ -43,7 +43,7 @@ const Navbar = () => {
             >
               Clinic Services
             </span>
-            <span onClick={() => navigate("/about")} className="nav-item ml-7 text-[#434DA6]">
+            <span onClick={() => navigate("/")} className="nav-item ml-7 text-[#434DA6]">
               About
             </span>
             <span onClick={() => navigate("/login")} className="nav-item ml-7 text-[#434DA6]">

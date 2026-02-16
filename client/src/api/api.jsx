@@ -56,6 +56,10 @@ export const getAuthUser = () => {
   return raw ? JSON.parse(raw) : null;
 };
 
+export const connectformsubmit= async(payload)=>{
+  const {data}=await api.post('/connectformsubmit',payload);
+  return data;
+}
 export const getHearingAids = async () => {
   const { data } = await api.get('/hearingaids');
   return data;

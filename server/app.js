@@ -61,6 +61,7 @@ app.use('/api/hearingaids', hearingAidsRoute);
 app.use('/api/appointments', appointmentsRoute);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api',connect_form_route)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

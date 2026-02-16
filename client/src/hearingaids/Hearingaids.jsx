@@ -5,13 +5,15 @@ import { useState } from 'react';
 import Eyewearcards from '../components/eyewearcard/Eyewearcard';
 import Footer from '../components/footer/Footer';
 import FadingLoader from '../components/loader/FadingLoader';
+import Hearingfilter from '../hearingaids/Hearingfilter';
 
 const Hearingaids = () => {
   const [searchTerm, setSearchTerm] = useState([]);
   return (
-     <div>
+     <div className='relative overflow-hidden'>
       <Navbar />
       <div className="flex items-center justify-center mt-8">
+          <Hearingfilter className="z-10 absolute"/>
         <input type="text" className="px-4 py-2 border border-gray-300 rounded-l-lg ml-2 focus:outline-none focus:ring-2 focus:ring-pink-500 w-full max-w-md" placeholder="Search hearing aids..." />
         <button className="bg-pink-500 mr-2 text-white px-4 py-2 rounded-r-lg hover:bg-pink-600 transition">
           <IoSearch className="text-xl" />
