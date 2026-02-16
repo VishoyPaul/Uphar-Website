@@ -55,3 +55,23 @@ export const getAuthUser = () => {
     localStorage.getItem(AUTH_USER_KEY) || sessionStorage.getItem(AUTH_USER_KEY);
   return raw ? JSON.parse(raw) : null;
 };
+
+export const getHearingAids = async () => {
+  const { data } = await api.get('/hearingaids');
+  return data;
+};
+
+export const createHearingAid = async (payload) => {
+  const { data } = await api.post('/hearingaids', payload);
+  return data;
+};
+
+export const deleteHearingAid = async (id) => {
+  const { data } = await api.delete(`/hearingaids/${id}`);
+  return data;
+};
+
+export const updateHearingAid = async (id, payload) => {
+  const { data } = await api.put(`/hearingaids/${id}`, payload);
+  return data;
+};

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const hearingAidSchema = new mongoose.Schema(
   {
@@ -36,4 +36,4 @@ const hearingAidSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('HearingAid', hearingAidSchema);
+module.exports = mongoose.model('HearingAid', hearingAidSchema);
