@@ -1,7 +1,7 @@
-import HearingAid from '../models/HearingAid.js';
+const HearingAid = require('./product.model.js');
 
 // Get all hearing aids
-export const getAllHearingAids = async (req, res) => {
+const getAllHearingAids = async (req, res) => {
   try {
     const hearingAids = await HearingAid.find();
     res.json({
@@ -17,7 +17,7 @@ export const getAllHearingAids = async (req, res) => {
 };
 
 // Get single hearing aid
-export const getHearingAidById = async (req, res) => {
+const getHearingAidById = async (req, res) => {
   try {
     const hearingAid = await HearingAid.findById(req.params.id);
     
@@ -41,7 +41,7 @@ export const getHearingAidById = async (req, res) => {
 };
 
 // Create hearing aid
-export const createHearingAid = async (req, res) => {
+const createHearingAid = async (req, res) => {
   try {
     const hearingAid = await HearingAid.create(req.body);
 
@@ -59,7 +59,7 @@ export const createHearingAid = async (req, res) => {
 };
 
 // Update hearing aid
-export const updateHearingAid = async (req, res) => {
+const updateHearingAid = async (req, res) => {
   try {
     const hearingAid = await HearingAid.findByIdAndUpdate(
       req.params.id,
@@ -88,7 +88,7 @@ export const updateHearingAid = async (req, res) => {
 };
 
 // Delete hearing aid
-export const deleteHearingAid = async (req, res) => {
+const deleteHearingAid = async (req, res) => {
   try {
     const hearingAid = await HearingAid.findByIdAndDelete(req.params.id);
 
@@ -109,4 +109,12 @@ export const deleteHearingAid = async (req, res) => {
       message: error.message
     });
   }
+};
+
+module.exports = {
+  getAllHearingAids,
+  getHearingAidById,
+  createHearingAid,
+  updateHearingAid,
+  deleteHearingAid,
 };

@@ -9,7 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var connectdb = require('./config/db')
 var authRoute = require('./routes/auth.route')
-var connect_form_route=require("./modules/connectform/submitform.route")
+var connect_form_route=require("./modules/connectform/subnitform.route")
 
 var app = express();
 
