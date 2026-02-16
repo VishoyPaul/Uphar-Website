@@ -8,6 +8,7 @@ import Addtocart from './addtocart/Addtocart'
 import Loginpage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import AdminPannel from './pages/AdminPannel'
 
 const App = () => {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -22,6 +23,7 @@ const App = () => {
         <Route path='/login' element={<Loginpage/>}/>
         <Route path='/signup' element={<SignupPage/>}/>
         <Route path='/' element={<About/>}/>
+        <Route path='/admin' element={<AdminPannel/>}/>
       </Routes>
     </GoogleOAuthProvider>
   )
