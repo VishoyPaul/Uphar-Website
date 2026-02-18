@@ -7,11 +7,13 @@ const {
   deleteAppointment,
   getAppointmentsByDate,
   getAppointmentsByStatus,
+  getMyAppointments,
 } = require('../modules/hearingaids/connectform.controller');
 
 const router = express.Router();
 
 router.get('/', getAllAppointments);
+router.get('/my', getMyAppointments);
 router.get('/date/:date', getAppointmentsByDate);
 router.get('/status/:status', getAppointmentsByStatus);
 router.get('/:id', getAppointmentById);

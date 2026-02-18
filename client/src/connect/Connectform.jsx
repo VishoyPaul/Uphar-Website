@@ -113,7 +113,7 @@ function Connectform() {
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-2">
             Book Your Appointment
           </h1>
-          <p className="text-gray-600">Schedule your eye check-up or hearing aid consultation</p>
+          <p className="text-gray-600">Schedule your hearing aid consultation</p>
         </div>
 
         {/* Success Message */}
@@ -147,7 +147,7 @@ function Connectform() {
           <div className="mb-6">
             <label className="block text-gray-700 font-semibold mb-3">Select Service Type *</label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className={`cursor-pointer border-2 rounded-xl p-4 transition-all ${formData.serviceType === 'eye-checkup' ? 'border-pink-500 bg-pink-50' : 'border-gray-200 hover:border-pink-300'}`}>
+              {/* <label className={`cursor-pointer border-2 rounded-xl p-4 transition-all ${formData.serviceType === 'eye-checkup' ? 'border-pink-500 bg-pink-50' : 'border-gray-200 hover:border-pink-300'}`}>
                 <input
                   type="radio"
                   name="serviceType"
@@ -159,7 +159,7 @@ function Connectform() {
                 />
                 <span className="font-medium">👁️ Eye Check-up</span>
                 <p className="text-xs text-gray-500 ml-6">In-store only</p>
-              </label>
+              </label> */}
 
               <label className={`cursor-pointer border-2 rounded-xl p-4 transition-all ${formData.serviceType === 'hearing-consultation' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300'}`}>
                 <input

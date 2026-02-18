@@ -14,9 +14,11 @@ const Footer = ({
 
         
         <div>
-          <h2 className={`text-xl font-bold ${textcolor}`}>
-            UPHAR<span className="text-pink-500">OPTICAL</span>
-          </h2>
+          <img
+            src="/icons/logo.png"
+            alt="Uphar Optical logo"
+            className="h-12 w-auto object-contain"
+          />
           <p className={`mt-4 text-sm ${othercolor}`}>
             Providing premium optical and hearing solutions since 1995.
             Your senses, our priority.

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getAppointments } from '../../api/api';
+import { getAppointments, updateAppointment } from '../../api/api';
 
 const formatDate = (value) => {
   if (!value) return '-';
@@ -21,6 +21,7 @@ const AdminAppointmentsBoard = ({ refreshKey = 0 }) => {
   const [appointments, setAppointments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [savingId, setSavingId] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -50,6 +51,23 @@ const AdminAppointmentsBoard = ({ refreshKey = 0 }) => {
       isMounted = false;
     };
   }, [refreshKey]);
+
+  const handleStatusChange = async (appointmentId, newStatus) => {
+    setSavingId(appointmentId);
+    setError('');
+    try {
+      const response = await updateAppointment(appointmentId, { status: newStatus });
+      const updatedAppointment = response?.data;
+
+      setAppointments((prev) =>
+        prev.map((item) => (item._id === appointmentId ? updatedAppointment : item))
+      );
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Failed to update appointment status.');
+    } finally {
+      setSavingId('');
+    }
+  };
 
   return (
     <StyledWrapper>
@@ -106,9 +124,22 @@ const AdminAppointmentsBoard = ({ refreshKey = 0 }) => {
                     <td>{formatTimeSlot(appt.timeSlot)}</td>
                     <td>{appt.visitType === 'home-visit' ? 'Home Visit' : 'In-store'}</td>
                     <td>
-                      <span className={`status-badge status-${appt.status || 'pending'}`}>
-                        {appt.status || 'pending'}
-                      </span>
+                      <div className="status-cell-wrap">
+                        <select
+                          className="status-select"
+                          value={appt.status || 'pending'}
+                          onChange={(e) => handleStatusChange(appt._id, e.target.value)}
+                          disabled={savingId === appt._id}
+                        >
+                          <option value="pending">pending</option>
+                          <option value="confirmed">confirmed</option>
+                          <option value="completed">completed</option>
+                          <option value="cancelled">cancelled</option>
+                        </select>
+                        <span className={`status-badge status-${appt.status || 'pending'}`}>
+                          {savingId === appt._id ? 'updating...' : (appt.status || 'pending')}
+                        </span>
+                      </div>
                     </td>
                     <td className="muted">{address}</td>
                     <td className="muted">{appt.additionalNotes || '-'}</td>
@@ -210,6 +241,22 @@ const StyledWrapper = styled.div`
     font-size: 0.78rem;
     text-transform: capitalize;
     display: inline-block;
+  }
+
+  .status-cell-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .status-select {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    background: #fff;
+    min-width: 120px;
   }
 
   .status-pending {

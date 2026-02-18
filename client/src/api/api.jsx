@@ -65,6 +65,11 @@ export const getHearingAids = async () => {
   return data;
 };
 
+export const getHearingAidById = async (id) => {
+  const { data } = await api.get(`/hearingaids/${id}`);
+  return data;
+};
+
 export const createHearingAid = async (payload) => {
   const formData = new FormData();
   formData.append('brand', payload.brand);
@@ -116,5 +121,17 @@ export const createAppointment = async (payload) => {
 
 export const getAppointments = async () => {
   const { data } = await api.get('/appointments');
+  return data;
+};
+
+export const updateAppointment = async (id, payload) => {
+  const { data } = await api.put(`/appointments/${id}`, payload);
+  return data;
+};
+
+export const getMyAppointments = async (email, phone) => {
+  const { data } = await api.get('/appointments/my', {
+    params: { email, phone },
+  });
   return data;
 };

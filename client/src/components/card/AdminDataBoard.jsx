@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { deleteHearingAid, getHearingAids } from '../../api/api';
 
-const AdminDataBoard = ({ refreshKey = 0 }) => {
+const AdminDataBoard = ({ refreshKey = 0, onChanged }) => {
   const [hearingAids, setHearingAids] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -43,6 +43,9 @@ const AdminDataBoard = ({ refreshKey = 0 }) => {
     try {
       await deleteHearingAid(id);
       setHearingAids((prev) => prev.filter((item) => item._id !== id));
+      if (onChanged) {
+        onChanged();
+      }
     } catch (err) {
       setError(err?.response?.data?.message || 'Failed to delete hearing aid.');
     }

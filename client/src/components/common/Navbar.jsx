@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import { FaEye } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { IoSearchSharp } from "react-icons/io5";
 import { TbEarScan } from "react-icons/tb";
-import { BsEyeglasses } from "react-icons/bs";
 import { RiCustomerService2Line } from "react-icons/ri";
 import { FaInfo } from "react-icons/fa6";
 import { FaBagShopping } from "react-icons/fa6";
@@ -18,30 +15,30 @@ const Navbar = () => {
   return (
     <div className="w-full bg">
       <div className="flex items-center p-4 shadow-xl relative bg-gradient-to-r from-white via-pink-50  ">
-        <div className="h-10 w-10 mx-2 bg-[rgb(253,50,209)] rounded-xl shadow-xl flex justify-center items-center">
-          <FaEye className="text-white w-8 h-7" />
-        </div>
-
-        <a href="/"><span className="text-[#434DA6] text-2xl font-bold flex">
-          UPHAR <span className="text-[rgb(229,15,183)] mx-1">OPTICAL</span>
-        </span></a>
+        <a href="/" className="mx-2 flex items-center">
+          <img
+            src="/icons/logo.png"
+            alt="Uphar Optical logo"
+            className="h-11 w-auto object-contain"
+          />
+        </a>
 
         <div className="hidden md:flex flex-1 justify-center">
           <div className="flex items-center gap-3">
-            <span onClick={() => navigate("/eye-wear")} className="nav-item ml-7 text-[#434DA6]">
+            {/* <span onClick={() => navigate("/eye-wear")} className="nav-item ml-7 text-[#434DA6]">
               Eyewear
-            </span>
+            </span> */}
             <span
               onClick={() => navigate("/hearing-aids")}
               className="nav-item ml-7 text-[#434DA6]"
             >
-              Hearing Aids
+              Products
             </span>
             <span
               onClick={() => navigate("/clinic-services")}
               className="nav-item ml-7 text-[#434DA6]"
             >
-              Clinic Services
+              Clinic-Services
             </span>
             <span onClick={() => navigate("/")} className="nav-item ml-7 text-[#434DA6]">
               About
@@ -65,15 +62,17 @@ const Navbar = () => {
             className="md:hidden absolute top-0 right-0 h-screen w-72 backdrop-blur-2xl bg-white shadow-xl flex flex-col gap-4 p-4"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="text-[#434DA6] text-xl font-bold mb-4">
-              UPHAR <span className="text-[rgb(229,15,183)]">OPTICAL</span>
-            </span>
+            <img
+              src="/icons/logo.png"
+              alt="Uphar Optical logo"
+              className="mb-4 h-10 w-auto object-contain"
+            />
 
-            <MobileItem
+            {/* <MobileItem
               icon={<BsEyeglasses />}
               text="Eyewear"
               onClick={() => navigate("/eye-wear")}
-            />
+            /> */}
             <MobileItem
               icon={<TbEarScan />}
               text="Hearing Aids"
