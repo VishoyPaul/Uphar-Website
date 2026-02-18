@@ -1,7 +1,22 @@
 import React from "react";
 import { FiShoppingCart } from "react-icons/fi";
+import { useCart } from "../../context/CartContext";
 
-const HearingAidCard = ({ image, brand, model, color, price, description }) => {
+const HearingAidCard = ({ _id, image, brand, model, color, price, description }) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart({
+      _id,
+      image,
+      brand,
+      model,
+      color,
+      price,
+      description,
+    });
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full">
 
@@ -41,7 +56,10 @@ const HearingAidCard = ({ image, brand, model, color, price, description }) => {
           {description}
         </p>
 
-        <button className="mt-3 sm:mt-4 w-full border border-indigo-500 text-indigo-600 py-2 rounded-lg text-sm sm:text-base hover:bg-indigo-600 hover:text-white transition">
+        <button
+          onClick={handleAddToCart}
+          className="mt-3 sm:mt-4 w-full border border-indigo-500 text-indigo-600 py-2 rounded-lg text-sm sm:text-base hover:bg-indigo-600 hover:text-white transition"
+        >
           <FiShoppingCart className="inline mr-2" /> Add to Cart
         </button>
       </div>

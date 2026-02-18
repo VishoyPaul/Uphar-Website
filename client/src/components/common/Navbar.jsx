@@ -53,7 +53,7 @@ const Navbar = () => {
         </div>
 
         <div className="ml-auto flex items-center">
-          <FaBagShopping className="text-[#434DA6] text-2xl mx-2" onClick={()=>navigate("/add-to-cart")}/>
+          <FaBagShopping className="text-[#434DA6] text-2xl mx-2" onClick={()=>navigate("/checkout")}/>
           <RxHamburgerMenu
             className="text-[#434DA6] text-2xl mx-2 md:hidden"
             onClick={() => setIsMenuOpen(true)}

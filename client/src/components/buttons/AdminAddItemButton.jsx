@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createHearingAid } from '../../api/api';
+import { createHearingAid, uploadImageToCloudinary } from '../../api/api';
 
 function AdminAddItemButton({ onCreated }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,12 +11,21 @@ function AdminAddItemButton({ onCreated }) {
     color: '',
     price: '',
     stock: '',
-    image: '',
+    image: null,
     description: ''
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
+
+    if (name === 'image') {
+      setFormData({
+        ...formData,
+        image: files && files[0] ? files[0] : null
+      });
+      return;
+    }
+
     setFormData({
       ...formData,
       [name]: value
@@ -28,8 +37,16 @@ function AdminAddItemButton({ onCreated }) {
     setIsSubmitting(true);
     setSubmitError('');
     try {
+      let imageUrl = '';
+
+      if (formData.image) {
+        const uploadResponse = await uploadImageToCloudinary(formData.image);
+        imageUrl = uploadResponse.imageUrl;
+      }
+
       await createHearingAid({
         ...formData,
+        image: imageUrl,
         price: Number(formData.price),
         stock: Number(formData.stock),
       });
@@ -39,7 +56,7 @@ function AdminAddItemButton({ onCreated }) {
         color: '',
         price: '',
         stock: '',
-        image: '',
+        image: null,
         description: ''
       });
       setIsModalOpen(false);
@@ -160,16 +177,18 @@ function AdminAddItemButton({ onCreated }) {
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="font-semibold text-indigo-700 mb-2 text-sm">Image URL *</label>
+                  <label className="font-semibold text-indigo-700 mb-2 text-sm">Image File *</label>
                   <input
-                    type="text"
+                    type="file"
                     name="image"
-                    value={formData.image}
                     onChange={handleChange}
-                    placeholder="https://example.com/image.jpg"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
                     className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-pink-400 focus:ring-4 focus:ring-pink-100 outline-none transition-all"
                     required
                   />
+                  {formData.image && (
+                    <p className="text-xs text-gray-500 mt-2">{formData.image.name}</p>
+                  )}
                 </div>
               </div>
 

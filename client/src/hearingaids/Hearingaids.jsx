@@ -72,6 +72,7 @@ const Hearingaids = () => {
             {filteredHearingAids.map((item) => (
               <HearingAidCard
                 key={item._id}
+                _id={item._id}
                 brand={item.brand}
                 model={item.model}
                 color={item.color}

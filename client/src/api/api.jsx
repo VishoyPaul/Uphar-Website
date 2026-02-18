@@ -66,7 +66,36 @@ export const getHearingAids = async () => {
 };
 
 export const createHearingAid = async (payload) => {
-  const { data } = await api.post('/hearingaids', payload);
+  const formData = new FormData();
+  formData.append('brand', payload.brand);
+  formData.append('model', payload.model);
+  formData.append('color', payload.color);
+  formData.append('price', payload.price);
+  formData.append('stock', payload.stock);
+  formData.append('description', payload.description || '');
+
+  if (payload.image) {
+    formData.append('image', payload.image);
+  }
+
+  const { data } = await api.post('/hearingaids', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return data;
+};
+
+export const uploadImageToCloudinary = async (file) => {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const { data } = await api.post('/imgupload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
   return data;
 };
 

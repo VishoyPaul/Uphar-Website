@@ -1,4 +1,5 @@
 const express = require('express');
+const upload = require('../imguplaod/middleware/image.uploader');
 const {
   getAllHearingAids,
   getHearingAidById,
@@ -11,8 +12,8 @@ const router = express.Router();
 
 router.get('/', getAllHearingAids);
 router.get('/:id', getHearingAidById);
-router.post('/', createHearingAid);
-router.put('/:id', updateHearingAid);
+router.post('/', upload.single('image'), createHearingAid);
+router.put('/:id', upload.single('image'), updateHearingAid);
 router.delete('/:id', deleteHearingAid);
 
 module.exports = router;

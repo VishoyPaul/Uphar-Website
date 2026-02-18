@@ -43,7 +43,26 @@ const getHearingAidById = async (req, res) => {
 // Create hearing aid
 const createHearingAid = async (req, res) => {
   try {
-    const hearingAid = await HearingAid.create(req.body);
+    const imageUrl = req.file ? req.file.path : req.body.image;
+
+    if (!imageUrl) {
+      return res.status(400).json({
+        success: false,
+        message: 'Image is required. Please upload an image file.'
+      });
+    }
+
+    const hearingAidData = {
+      brand: req.body.brand,
+      model: req.body.model,
+      color: req.body.color,
+      price: Number(req.body.price),
+      stock: Number(req.body.stock),
+      image: imageUrl,
+      description: req.body.description
+    };
+
+    const hearingAid = await HearingAid.create(hearingAidData);
 
     res.status(201).json({
       success: true,
@@ -61,9 +80,20 @@ const createHearingAid = async (req, res) => {
 // Update hearing aid
 const updateHearingAid = async (req, res) => {
   try {
+    const updateData = {};
+
+    if (req.body.brand !== undefined) updateData.brand = req.body.brand;
+    if (req.body.model !== undefined) updateData.model = req.body.model;
+    if (req.body.color !== undefined) updateData.color = req.body.color;
+    if (req.body.price !== undefined) updateData.price = Number(req.body.price);
+    if (req.body.stock !== undefined) updateData.stock = Number(req.body.stock);
+    if (req.body.description !== undefined) updateData.description = req.body.description;
+    if (req.file) updateData.image = req.file.path;
+    if (req.body.image && !req.file) updateData.image = req.body.image;
+
     const hearingAid = await HearingAid.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
 
