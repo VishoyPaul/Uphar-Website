@@ -1,1 +1,107 @@
 @import "tailwindcss";
+
+.uphar-alert-wrapper {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+  width: min(26rem, calc(100vw - 2rem));
+}
+
+.uphar-alert-item {
+  pointer-events: auto;
+  border-radius: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem;
+  box-shadow: 0 14px 40px rgba(8, 17, 52, 0.18);
+  backdrop-filter: blur(6px);
+  border: 1px solid transparent;
+  animation: uphar-slide-in 0.24s ease-out;
+}
+
+.uphar-alert-success {
+  background: linear-gradient(120deg, rgba(34, 197, 94, 0.94), rgba(16, 185, 129, 0.9));
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.uphar-alert-error {
+  background: linear-gradient(120deg, rgba(239, 68, 68, 0.94), rgba(220, 38, 38, 0.9));
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.uphar-alert-info {
+  background: linear-gradient(120deg, rgba(59, 130, 246, 0.94), rgba(37, 99, 235, 0.9));
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.uphar-alert-warning {
+  background: linear-gradient(120deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.9));
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.uphar-alert-icon {
+  font-size: 1.15rem;
+  margin-top: 0.2rem;
+}
+
+.uphar-alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.uphar-alert-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.uphar-alert-message {
+  margin: 0.1rem 0 0;
+  font-size: 0.83rem;
+  line-height: 1.35;
+  opacity: 0.95;
+}
+
+.uphar-alert-close {
+  background: transparent;
+  color: inherit;
+  border: none;
+  padding: 0.15rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.uphar-alert-close:hover {
+  opacity: 1;
+}
+
+@keyframes uphar-slide-in {
+  from {
+    transform: translateY(-10px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .uphar-alert-wrapper {
+    left: 0.75rem;
+    right: 0.75rem;
+    width: auto;
+  }
+}

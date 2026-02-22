@@ -1,4 +1,5 @@
 const express = require('express');
+const { verifyAccessToken } = require('../middleware/verifyToken');
 const {
   getAllAppointments,
   getAppointmentById,
@@ -12,13 +13,13 @@ const {
 
 const router = express.Router();
 
-router.get('/', getAllAppointments);
+router.get('/', verifyAccessToken, getAllAppointments);
 router.get('/my', getMyAppointments);
-router.get('/date/:date', getAppointmentsByDate);
-router.get('/status/:status', getAppointmentsByStatus);
-router.get('/:id', getAppointmentById);
+router.get('/date/:date', verifyAccessToken, getAppointmentsByDate);
+router.get('/status/:status', verifyAccessToken, getAppointmentsByStatus);
+router.get('/:id', verifyAccessToken, getAppointmentById);
 router.post('/', createAppointment);
-router.put('/:id', updateAppointment);
-router.delete('/:id', deleteAppointment);
+router.put('/:id', verifyAccessToken, updateAppointment);
+router.delete('/:id', verifyAccessToken, deleteAppointment);
 
 module.exports = router;

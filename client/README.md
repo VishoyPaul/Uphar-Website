@@ -14,3 +14,15 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Deployment (Vercel + Render)
+
+1. Set Vercel project root to `client/`.
+2. Add frontend env vars in Vercel:
+   - `VITE_API_URL=https://<your-render-backend>/api`
+   - `VITE_GOOGLE_CLIENT_ID=<your-google-client-id>`
+3. Deploy backend on Render from `server/` and set:
+   - `NODE_ENV=production`
+   - `MONGO_URI`, `JWT_SECRET`
+   - `FRONTEND_URL=https://<your-vercel-domain>`
+4. This project includes `client/vercel.json` rewrite rules so direct route refreshes (React Router) work in production.

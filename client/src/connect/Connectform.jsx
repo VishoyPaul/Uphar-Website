@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createAppointment } from '../api/api';
+import useAlert from '../hooks/useAlert';
 
 function Connectform() {
   const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ function Connectform() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const { showAlert } = useAlert();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -66,6 +68,11 @@ function Connectform() {
       const response = await createAppointment(formData);
       if (response?.success) {
         setShowSuccess(true);
+        showAlert({
+          type: 'success',
+          title: 'Appointment booked',
+          message: 'Your appointment request has been submitted.',
+        });
         // Reset form
         setFormData({
           serviceType: '',
@@ -91,10 +98,22 @@ function Connectform() {
         // Hide success message after 5 seconds
         setTimeout(() => setShowSuccess(false), 5000);
       } else {
-        setSubmitError('Failed to book appointment. Please try again.');
+        const message = 'Failed to book appointment. Please try again.';
+        setSubmitError(message);
+        showAlert({
+          type: 'error',
+          title: 'Booking failed',
+          message,
+        });
       }
     } catch (error) {
-      setSubmitError(error?.response?.data?.message || 'Failed to book appointment. Please try again.');
+      const message = error?.response?.data?.message || 'Failed to book appointment. Please try again.';
+      setSubmitError(message);
+      showAlert({
+        type: 'error',
+        title: 'Booking failed',
+        message,
+      });
     } finally {
       setIsSubmitting(false);
     }

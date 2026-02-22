@@ -1,6 +1,7 @@
 import React from "react";
 import { FaFacebookF, FaInstagram, FaAt } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
+import logoImage from "../../image/logo.png";
 
 const Footer = ({
   bgcolor = "bg-white",
@@ -15,9 +16,9 @@ const Footer = ({
         
         <div>
           <img
-            src="/icons/logo.png"
+            src={logoImage}
             alt="Uphar Optical logo"
-            className="h-12 w-auto object-contain"
+            className="h-16 w-16 object-contain"
           />
           <p className={`mt-4 text-sm ${othercolor}`}>
             Providing premium optical and hearing solutions since 1995.

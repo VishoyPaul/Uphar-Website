@@ -39,7 +39,7 @@ function AdminDashCard({ refreshKey = 0 }) {
 
         const lowStockTotal = hearingAids.filter((item) => Number(item.stock) < 10).length;
         setLowStockCount(lowStockTotal);
-      } catch (error) {
+      } catch {
         if (!isMounted) return;
         setAppointmentsCount(0);
         setTodayAppointmentsCount(0);

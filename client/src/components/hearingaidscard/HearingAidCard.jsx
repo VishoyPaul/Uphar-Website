@@ -1,10 +1,12 @@
 import React from "react";
 import { FiShoppingCart } from "react-icons/fi";
-import { useCart } from "../../context/CartContext";
+import useCart from "../../hooks/useCart";
 import { useNavigate } from "react-router-dom";
+import useAlert from "../../hooks/useAlert";
 
 const HearingAidCard = ({ _id, image, brand, model, color, price, description }) => {
   const { addToCart } = useCart();
+  const { showAlert } = useAlert();
   const navigate = useNavigate();
 
   const handleAddToCart = (event) => {
@@ -17,6 +19,11 @@ const HearingAidCard = ({ _id, image, brand, model, color, price, description })
       color,
       price,
       description,
+    });
+    showAlert({
+      type: 'success',
+      title: 'Item added to cart',
+      message: `${brand} ${model} has been added.`,
     });
   };
 

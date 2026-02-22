@@ -6,20 +6,42 @@ import { FaInfo } from "react-icons/fa6";
 import { FaBagShopping } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { GrLogin } from "react-icons/gr";
+import logoImage from "../../image/logo.png";
+import useCart from "../../hooks/useCart";
+import useAuth from "../../hooks/useAuth";
+import useAlert from "../../hooks/useAlert";
 
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { cartCount } = useCart();
+  const { isAuthenticated, logout } = useAuth();
+  const { showAlert } = useAlert();
+
+  const handleAuthAction = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    await logout();
+    showAlert({
+      type: 'success',
+      title: 'Logged out',
+      message: 'You have logged out successfully.',
+    });
+    navigate("/");
+  };
 
   return (
     <div className="w-full bg">
       <div className="flex items-center p-4 shadow-xl relative bg-gradient-to-r from-white via-pink-50  ">
         <a href="/" className="mx-2 flex items-center">
           <img
-            src="/icons/logo.png"
+            src={logoImage}
             alt="Uphar Optical logo"
-            className="h-11 w-auto object-contain"
+            className="h-14 w-14 object-contain"
           />
         </a>
 
@@ -43,14 +65,19 @@ const Navbar = () => {
             <span onClick={() => navigate("/")} className="nav-item ml-7 text-[#434DA6]">
               About
             </span>
-            <span onClick={() => navigate("/login")} className="nav-item ml-7 text-[#434DA6]">
-              Login
+            <span onClick={handleAuthAction} className="nav-item ml-7 text-[#434DA6]">
+              {isAuthenticated ? "Logout" : "Login"}
             </span>
           </div>
         </div>
 
-        <div className="ml-auto flex items-center">
-          <FaBagShopping className="text-[#434DA6] text-2xl mx-2" onClick={()=>navigate("/checkout")}/>
+        <div className="ml-auto flex items-center relative">
+          <FaBagShopping className="text-[#434DA6] text-2xl mx-2 cursor-pointer" onClick={()=>navigate("/cart")}/>
+          {cartCount > 0 ? (
+            <span className="absolute -top-1 left-5 min-w-5 h-5 px-1 rounded-full bg-pink-500 text-white text-[11px] font-semibold flex items-center justify-center">
+              {cartCount}
+            </span>
+          ) : null}
           <RxHamburgerMenu
             className="text-[#434DA6] text-2xl mx-2 md:hidden"
             onClick={() => setIsMenuOpen(true)}
@@ -63,9 +90,9 @@ const Navbar = () => {
             onClick={() => setIsMenuOpen(false)}
           >
             <img
-              src="/icons/logo.png"
+              src={logoImage}
               alt="Uphar Optical logo"
-              className="mb-4 h-10 w-auto object-contain"
+              className="mb-4 h-12 w-12 object-contain"
             />
 
             {/* <MobileItem
@@ -90,8 +117,8 @@ const Navbar = () => {
             />
             <MobileItem
               icon={<GrLogin />}
-              text="Login"
-              onClick={() => navigate('/login')}
+              text={isAuthenticated ? "Logout" : "Login"}
+              onClick={handleAuthAction}
             />
           </div>
         )}

@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate } from 'react-router-dom';
-import { googleLoginUser, persistAuth } from '../../../api/api';
+import useAuth from '../../../hooks/useAuth';
+import useAlert from '../../../hooks/useAlert';
 
-const LoginForm = () => {
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const LoginForm = ({ redirectTo = '/' }) => {
   const navigator = useNavigate();
+  const { login, adminLogin, googleLogin } = useAuth();
+  const { showAlert } = useAlert();
+  const ADMIN_USERNAME = 'admin';
+  const ADMIN_PASSWORD = 'admin123';
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: true,
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,21 +34,37 @@ const LoginForm = () => {
         throw new Error('No Google credential received');
       }
 
-      const authData = await googleLoginUser({
+      await googleLogin({
         credential: credentialResponse.credential,
       });
+      showAlert({
+        type: 'success',
+        title: 'Login successful',
+        message: 'You are now signed in with Google.',
+      });
 
-      persistAuth(authData, formData.rememberMe);
-      navigator('/');
+      navigator(redirectTo, { replace: true });
     } catch (error) {
-      setErrorMessage(error?.response?.data?.message || 'Google login failed');
+      const message = error?.response?.data?.message || 'Google login failed';
+      setErrorMessage(message);
+      showAlert({
+        type: 'error',
+        title: 'Login failed',
+        message,
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleGoogleError = () => {
-    setErrorMessage('Google Login Failed. Please try again.');
+    const message = 'Google Login Failed. Please try again.';
+    setErrorMessage(message);
+    showAlert({
+      type: 'error',
+      title: 'Google login failed',
+      message,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -56,15 +74,58 @@ const LoginForm = () => {
       setErrorMessage('');
       setIsSubmitting(true);
 
-      const { data: authData } = await axios.post(`${API_BASE_URL}/auth/login`, {
+      await login({
         email: formData.email,
         password: formData.password,
       });
+      showAlert({
+        type: 'success',
+        title: 'Login successful',
+        message: 'Welcome back to Uphar.',
+      });
 
-      persistAuth(authData, formData.rememberMe);
-      navigator('/');
+      navigator(redirectTo, { replace: true });
     } catch (error) {
-      setErrorMessage(error?.response?.data?.message || 'Login failed');
+      const message = error?.response?.data?.message || 'Login failed';
+      setErrorMessage(message);
+      showAlert({
+        type: 'error',
+        title: 'Login failed',
+        message,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleAdminLogin = async () => {
+    try {
+      setErrorMessage('');
+      setIsSubmitting(true);
+      setFormData({
+        email: ADMIN_USERNAME,
+        password: ADMIN_PASSWORD,
+      });
+
+      await adminLogin({
+        username: ADMIN_USERNAME,
+        password: ADMIN_PASSWORD,
+      });
+      showAlert({
+        type: 'success',
+        title: 'Admin login successful',
+        message: 'Welcome to the admin panel.',
+      });
+
+      navigator('/admin', { replace: true });
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Admin login failed';
+      setErrorMessage(message);
+      showAlert({
+        type: 'error',
+        title: 'Admin login failed',
+        message,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -117,10 +178,6 @@ const LoginForm = () => {
       </div>
 
       <div className="flex flex-row items-center gap-2.5 justify-between">
-        <div className="flex items-center gap-1">
-          <input type="checkbox" name="rememberMe" checked={formData.rememberMe} onChange={handleChange} />
-          <label className="text-sm text-black font-normal">Remember me </label>
-        </div>
         <span className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer">Forgot password?</span>
       </div>
 
@@ -134,9 +191,21 @@ const LoginForm = () => {
         {isSubmitting ? 'Signing In...' : 'Sign In'}
       </button>
 
+      <button
+        type="button"
+        onClick={handleAdminLogin}
+        disabled={isSubmitting}
+        className="mb-2.5 bg-[#1f4aa8] border-none text-white text-[15px] font-medium rounded-[10px] h-[50px] w-full cursor-pointer hover:bg-[#183c89] transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {isSubmitting ? 'Signing In...' : 'Admin Login (admin / admin123)'}
+      </button>
+
       <p className="text-center text-black text-sm my-1">
         Don&apos;t have an account?
-        <Link to="/signup" className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer">
+        <Link
+          to={`/signup${redirectTo ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`}
+          className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer"
+        >
           Sign Up
         </Link>
       </p>

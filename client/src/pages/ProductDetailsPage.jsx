@@ -5,12 +5,14 @@ import Navbar from '../components/common/Navbar';
 import Footer from '../components/footer/Footer';
 import FadingLoader from '../components/loader/FadingLoader';
 import { getHearingAidById } from '../api/api';
-import { useCart } from '../context/CartContext';
+import useCart from '../hooks/useCart';
+import useAlert from '../hooks/useAlert';
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { showAlert } = useAlert();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -58,10 +60,21 @@ const ProductDetailsPage = () => {
       price: product.price,
       description: product.description,
     });
+    showAlert({
+      type: 'success',
+      title: 'Item added to cart',
+      message: `${product.brand} ${product.model} has been added.`,
+    });
   };
 
   const handleBuyNow = () => {
     handleAddToCart();
+    showAlert({
+      type: 'info',
+      title: 'Proceeding to checkout',
+      message: 'Complete your order details on the checkout page.',
+      duration: 2600,
+    });
     navigate('/checkout');
   };
 

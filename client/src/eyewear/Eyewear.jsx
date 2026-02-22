@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/common/Navbar";
 import { IoSearch } from "react-icons/io5";
-import { useState } from "react";
 import Eyewearcards from "../components/eyewearcard/Eyewearcard";
 import Footer from "../components/footer/Footer";
 import FadingLoader from "../components/loader/FadingLoader";
 import Eyefilter from "../eyewear/Eyefilter";
-const eyewear = () => {
-  const [searchTerm, setSearchTerm] = useState([]);
+const Eyewear = () => {
+  const [searchTerm] = useState([]);
   return (
     <div className="relative overflow-hidden">
       <Navbar />
@@ -45,4 +44,4 @@ const eyewear = () => {
   );
 };
 
-export default eyewear;
+export default Eyewear;
