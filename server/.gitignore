@@ -1,0 +1,110 @@
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# API Keys & Secrets
+config/secrets.js
+config/keys.js
+secrets/
+*.key
+*.pem
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+dump.sql
+database.json
+
+# Credentials
+credentials.json
+service-account.json
+firebase-adminsdk.json
+google-credentials.json
+aws-credentials.json
+
+# Authentication
+.auth/
+token.json
+refresh_token.json
+access_token.json
+
+# SSL/TLS
+ssl/
+certs/
+*.key
+*.csr
+
+# Logs (may contain sensitive data)
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Session & Cache
+sessions/
+.cache/
+redis-dump.rdb
+
+# Uploads (user data)
+uploads/
+temp/
+tmp/
+
+# Backup files
+*.bak
+*.backup
+backup/
+*.dump
+
+# Configuration files with secrets
+config.local.js
+config.production.js
+secrets.yaml
+secrets.yml
+
+# Payment gateway credentials
+stripe-config.json
+razorpay-config.json
+paypal-credentials.json
+
+# Email service credentials
+sendgrid.json
+mailgun-credentials.json
+smtp-config.json
+
+# Cloud service credentials
+.aws/
+.gcloud/
+azure-credentials.json
+
+# MongoDB
+mongodb-uri.txt
+mongo-credentials.json
+
+# Private keys
+private/
+*.private
+
+# Build artifacts
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db

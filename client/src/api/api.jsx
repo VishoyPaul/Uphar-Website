@@ -1,20 +1,120 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-axios.create({
+const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-export const fetchEyewear = async () => {
-  try {
-    const response = await axios.get('/eyewear');
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching eyewear:', error);
-    throw error;
-  }
+const AUTH_TOKEN_KEY = 'auth_token';
+const AUTH_USER_KEY = 'auth_user';
+
+const getStorage = (rememberMe = true) => (rememberMe ? localStorage : sessionStorage);
+
+export const signupUser = async (payload) => {
+  const { data } = await api.post('/auth/signup', payload);
+  return data;
+};
+
+export const loginUser = async (payload) => {
+  const { data } = await api.post('/auth/login', payload);
+  return data;
+};
+
+export const googleLoginUser = async (payload) => {
+  const { data } = await api.post('/auth/google-login', payload);
+  return data;
+};
+
+export const persistAuth = (authData, rememberMe = true) => {
+  const storage = getStorage(rememberMe);
+  const otherStorage = rememberMe ? sessionStorage : localStorage;
+
+  otherStorage.removeItem(AUTH_TOKEN_KEY);
+  otherStorage.removeItem(AUTH_USER_KEY);
+
+  storage.setItem(AUTH_TOKEN_KEY, authData.token);
+  storage.setItem(AUTH_USER_KEY, JSON.stringify(authData.user));
+};
+
+export const clearAuth = () => {
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  localStorage.removeItem(AUTH_USER_KEY);
+  sessionStorage.removeItem(AUTH_TOKEN_KEY);
+  sessionStorage.removeItem(AUTH_USER_KEY);
+};
+
+export const getAuthToken = () =>
+  localStorage.getItem(AUTH_TOKEN_KEY) || sessionStorage.getItem(AUTH_TOKEN_KEY);
+
+export const getAuthUser = () => {
+  const raw =
+    localStorage.getItem(AUTH_USER_KEY) || sessionStorage.getItem(AUTH_USER_KEY);
+  return raw ? JSON.parse(raw) : null;
+};
+
+export const connectformsubmit= async(payload)=>{
+  const {data}=await api.post('/connectformsubmit',payload);
+  return data;
 }
+export const getHearingAids = async () => {
+  const { data } = await api.get('/hearingaids');
+  return data;
+};
+
+export const createHearingAid = async (payload) => {
+  const formData = new FormData();
+  formData.append('brand', payload.brand);
+  formData.append('model', payload.model);
+  formData.append('color', payload.color);
+  formData.append('price', payload.price);
+  formData.append('stock', payload.stock);
+  formData.append('description', payload.description || '');
+
+  if (payload.image) {
+    formData.append('image', payload.image);
+  }
+
+  const { data } = await api.post('/hearingaids', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return data;
+};
+
+export const uploadImageToCloudinary = async (file) => {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const { data } = await api.post('/imgupload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return data;
+};
+
+export const deleteHearingAid = async (id) => {
+  const { data } = await api.delete(`/hearingaids/${id}`);
+  return data;
+};
+
+export const updateHearingAid = async (id, payload) => {
+  const { data } = await api.put(`/hearingaids/${id}`, payload);
+  return data;
+};
+
+export const createAppointment = async (payload) => {
+  const { data } = await api.post('/appointments', payload);
+  return data;
+};
+
+export const getAppointments = async () => {
+  const { data } = await api.get('/appointments');
+  return data;
+};

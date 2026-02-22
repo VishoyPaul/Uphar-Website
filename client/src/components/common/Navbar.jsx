@@ -16,15 +16,15 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full">
-      <div className="flex items-center p-4 shadow-xl rounded-4xl relative">
+    <div className="w-full bg">
+      <div className="flex items-center p-4 shadow-xl relative bg-gradient-to-r from-white via-pink-50  ">
         <div className="h-10 w-10 mx-2 bg-[rgb(253,50,209)] rounded-xl shadow-xl flex justify-center items-center">
           <FaEye className="text-white w-8 h-7" />
         </div>
 
-        <span className="text-[#434DA6] text-2xl font-bold flex">
+        <a href="/"><span className="text-[#434DA6] text-2xl font-bold flex">
           UPHAR <span className="text-[rgb(229,15,183)] mx-1">OPTICAL</span>
-        </span>
+        </span></a>
 
         <div className="hidden md:flex flex-1 justify-center">
           <div className="flex items-center gap-3">
@@ -43,14 +43,17 @@ const Navbar = () => {
             >
               Clinic Services
             </span>
-            <span onClick={() => navigate("/about")} className="nav-item ml-7 text-[#434DA6]">
+            <span onClick={() => navigate("/")} className="nav-item ml-7 text-[#434DA6]">
               About
+            </span>
+            <span onClick={() => navigate("/login")} className="nav-item ml-7 text-[#434DA6]">
+              Login
             </span>
           </div>
         </div>
 
         <div className="ml-auto flex items-center">
-          <FaBagShopping className="text-[#434DA6] text-2xl mx-2" />
+          <FaBagShopping className="text-[#434DA6] text-2xl mx-2" onClick={()=>navigate("/checkout")}/>
           <RxHamburgerMenu
             className="text-[#434DA6] text-2xl mx-2 md:hidden"
             onClick={() => setIsMenuOpen(true)}
@@ -84,12 +87,12 @@ const Navbar = () => {
             <MobileItem
               icon={<FaInfo />}
               text="About"
-              onClick={() => navigate("/about")}
+              onClick={() => navigate("/")}
             />
             <MobileItem
               icon={<GrLogin />}
               text="Login"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate('/login')}
             />
           </div>
         )}
