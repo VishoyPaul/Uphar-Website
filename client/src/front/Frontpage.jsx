@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 const Frontpage = () => {
-  const heroImage = "/Screenshot%20From%202026-02-22%2017-46-53.png";
+  const heroImage = "/device_png.png";
   const navigate = useNavigate();
   return (
     <section className="w-full min-h-screen bg-gradient-to-b from-[#fff4fb] via-[#fdf8ff] to-[#efeaff]">
