@@ -21,10 +21,10 @@ function AdminPannel() {
           <AdminAddItemButton onCreated={handleCreated}/>
         </div>
         <div className=''>
-          <AdminDashCard/>
+          <AdminDashCard refreshKey={refreshKey}/>
         </div>
-        <AdminDataBoard refreshKey={refreshKey}/>
-        <AdminAppointmentsBoard/>
+        <AdminDataBoard refreshKey={refreshKey} onChanged={handleCreated}/>
+        <AdminAppointmentsBoard refreshKey={refreshKey}/>
         
       </main>
       <footer><Footer/></footer>

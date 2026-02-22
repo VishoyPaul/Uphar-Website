@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate } from 'react-router-dom';
-import { googleLoginUser, persistAuth } from '../../../api/api';
+import useAuth from '../../../hooks/useAuth';
+import useAlert from '../../../hooks/useAlert';
 
-const SignupForm = () => {
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const SignupForm = ({ redirectTo = '/' }) => {
   const navigator = useNavigate();
+  const { signup, googleLogin } = useAuth();
+  const { showAlert } = useAlert();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -28,21 +29,37 @@ const SignupForm = () => {
         throw new Error('No Google credential received');
       }
 
-      const authData = await googleLoginUser({
+      await googleLogin({
         credential: credentialResponse.credential,
       });
+      showAlert({
+        type: 'success',
+        title: 'Signup successful',
+        message: 'Your account is ready.',
+      });
 
-      persistAuth(authData, true);
-      navigator('/');
+      navigator(redirectTo, { replace: true });
     } catch (error) {
-      setErrorMessage(error?.response?.data?.message || 'Google signup failed');
+      const message = error?.response?.data?.message || 'Google signup failed';
+      setErrorMessage(message);
+      showAlert({
+        type: 'error',
+        title: 'Signup failed',
+        message,
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handelGoogleError = () => {
-    setErrorMessage('Google Error in signup');
+    const message = 'Google Error in signup';
+    setErrorMessage(message);
+    showAlert({
+      type: 'error',
+      title: 'Google signup failed',
+      message,
+    });
   };
 
   const handleChange = (e) => {
@@ -57,12 +74,24 @@ const SignupForm = () => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      setErrorMessage('Passwords do not match');
+      const message = 'Passwords do not match';
+      setErrorMessage(message);
+      showAlert({
+        type: 'warning',
+        title: 'Check your password',
+        message,
+      });
       return;
     }
 
     if (!formData.agreeToTerms) {
-      setErrorMessage('Please agree to terms and conditions');
+      const message = 'Please agree to terms and conditions';
+      setErrorMessage(message);
+      showAlert({
+        type: 'warning',
+        title: 'Terms not accepted',
+        message,
+      });
       return;
     }
 
@@ -70,18 +99,28 @@ const SignupForm = () => {
       setErrorMessage('');
       setIsSubmitting(true);
 
-      const { data: authData } = await axios.post(`${API_BASE_URL}/auth/signup`, {
+      await signup({
         firstName: formData.firstName,
         lastName: formData.lastName,
         mobile: formData.mobile,
         email: formData.email,
         password: formData.password,
       });
+      showAlert({
+        type: 'success',
+        title: 'Signup successful',
+        message: 'Welcome to Uphar.',
+      });
 
-      persistAuth(authData, true);
-      navigator('/');
+      navigator(redirectTo, { replace: true });
     } catch (error) {
-      setErrorMessage(error?.response?.data?.message || 'Signup failed');
+      const message = error?.response?.data?.message || 'Signup failed';
+      setErrorMessage(message);
+      showAlert({
+        type: 'error',
+        title: 'Signup failed',
+        message,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -232,7 +271,10 @@ const SignupForm = () => {
 
       <p className="text-center text-black text-sm my-1">
         Already have an account?
-        <Link to="/login" className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer">
+        <Link
+          to={`/login${redirectTo ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`}
+          className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer"
+        >
           Sign In
         </Link>
       </p>

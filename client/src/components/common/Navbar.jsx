@@ -1,59 +1,83 @@
 import React, { useState } from "react";
-import { FaEye } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { IoSearchSharp } from "react-icons/io5";
 import { TbEarScan } from "react-icons/tb";
-import { BsEyeglasses } from "react-icons/bs";
 import { RiCustomerService2Line } from "react-icons/ri";
 import { FaInfo } from "react-icons/fa6";
 import { FaBagShopping } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { GrLogin } from "react-icons/gr";
+import logoImage from "../../image/logo.png";
+import useCart from "../../hooks/useCart";
+import useAuth from "../../hooks/useAuth";
+import useAlert from "../../hooks/useAlert";
 
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { cartCount } = useCart();
+  const { isAuthenticated, logout } = useAuth();
+  const { showAlert } = useAlert();
+
+  const handleAuthAction = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    await logout();
+    showAlert({
+      type: 'success',
+      title: 'Logged out',
+      message: 'You have logged out successfully.',
+    });
+    navigate("/");
+  };
 
   return (
     <div className="w-full bg">
       <div className="flex items-center p-4 shadow-xl relative bg-gradient-to-r from-white via-pink-50  ">
-        <div className="h-10 w-10 mx-2 bg-[rgb(253,50,209)] rounded-xl shadow-xl flex justify-center items-center">
-          <FaEye className="text-white w-8 h-7" />
-        </div>
-
-        <a href="/"><span className="text-[#434DA6] text-2xl font-bold flex">
-          UPHAR <span className="text-[rgb(229,15,183)] mx-1">OPTICAL</span>
-        </span></a>
+        <a href="/" className="mx-2 flex items-center">
+          <img
+            src={logoImage}
+            alt="Uphar Optical logo"
+            className="h-14 w-14 object-contain"
+          />
+        </a>
 
         <div className="hidden md:flex flex-1 justify-center">
           <div className="flex items-center gap-3">
-            <span onClick={() => navigate("/eye-wear")} className="nav-item ml-7 text-[#434DA6]">
+            {/* <span onClick={() => navigate("/eye-wear")} className="nav-item ml-7 text-[#434DA6]">
               Eyewear
-            </span>
+            </span> */}
             <span
               onClick={() => navigate("/hearing-aids")}
               className="nav-item ml-7 text-[#434DA6]"
             >
-              Hearing Aids
+              Products
             </span>
             <span
               onClick={() => navigate("/clinic-services")}
               className="nav-item ml-7 text-[#434DA6]"
             >
-              Clinic Services
+              Clinic-Services
             </span>
             <span onClick={() => navigate("/")} className="nav-item ml-7 text-[#434DA6]">
               About
             </span>
-            <span onClick={() => navigate("/login")} className="nav-item ml-7 text-[#434DA6]">
-              Login
+            <span onClick={handleAuthAction} className="nav-item ml-7 text-[#434DA6]">
+              {isAuthenticated ? "Logout" : "Login"}
             </span>
           </div>
         </div>
 
-        <div className="ml-auto flex items-center">
-          <FaBagShopping className="text-[#434DA6] text-2xl mx-2" onClick={()=>navigate("/checkout")}/>
+        <div className="ml-auto flex items-center relative">
+          <FaBagShopping className="text-[#434DA6] text-2xl mx-2 cursor-pointer" onClick={()=>navigate("/cart")}/>
+          {cartCount > 0 ? (
+            <span className="absolute -top-1 left-5 min-w-5 h-5 px-1 rounded-full bg-pink-500 text-white text-[11px] font-semibold flex items-center justify-center">
+              {cartCount}
+            </span>
+          ) : null}
           <RxHamburgerMenu
             className="text-[#434DA6] text-2xl mx-2 md:hidden"
             onClick={() => setIsMenuOpen(true)}
@@ -65,15 +89,17 @@ const Navbar = () => {
             className="md:hidden absolute top-0 right-0 h-screen w-72 backdrop-blur-2xl bg-white shadow-xl flex flex-col gap-4 p-4"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="text-[#434DA6] text-xl font-bold mb-4">
-              UPHAR <span className="text-[rgb(229,15,183)]">OPTICAL</span>
-            </span>
+            <img
+              src={logoImage}
+              alt="Uphar Optical logo"
+              className="mb-4 h-12 w-12 object-contain"
+            />
 
-            <MobileItem
+            {/* <MobileItem
               icon={<BsEyeglasses />}
               text="Eyewear"
               onClick={() => navigate("/eye-wear")}
-            />
+            /> */}
             <MobileItem
               icon={<TbEarScan />}
               text="Hearing Aids"
@@ -91,8 +117,8 @@ const Navbar = () => {
             />
             <MobileItem
               icon={<GrLogin />}
-              text="Login"
-              onClick={() => navigate('/login')}
+              text={isAuthenticated ? "Logout" : "Login"}
+              onClick={handleAuthAction}
             />
           </div>
         )}

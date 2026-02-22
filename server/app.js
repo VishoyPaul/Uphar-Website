@@ -8,7 +8,7 @@ var cors = require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var connectdb = require('./config/db')
-var authRoute = require('./routes/auth.route')
+var authRoute = require('./routes/authRoutes')
 var hearingAidsRoute = require('./routes/hearingaids.route')
 var appointmentsRoute = require('./routes/appointments.route')
 var imageUploadRoute = require('./routes/imgupload.route')
@@ -20,22 +20,32 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 connectdb();
-const allowedOrigins = [
+const envOrigins = [
+  ...(process.env.FRONTEND_URLS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
   process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
 ].filter(Boolean);
+const allowedOrigins = [...new Set(envOrigins.map((origin) => origin.replace(/\/$/, '')))];
 
 const localhostRegex = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/;
+const vercelPreviewRegex = /^https:\/\/.*\.vercel\.app$/;
 
 const corsOptions = {
   origin(origin, callback) {
     // Allow requests like Postman/cURL (no Origin header)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    if (allowedOrigins.includes(normalizedOrigin)) return callback(null, true);
     if (localhostRegex.test(origin)) return callback(null, true);
+    if (process.env.ALLOW_VERCEL_PREVIEW === 'true' && vercelPreviewRegex.test(origin)) {
+      return callback(null, true);
+    }
     return callback(new Error(`CORS blocked for origin: ${origin}`));
   },
   credentials: true,

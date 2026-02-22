@@ -228,6 +228,39 @@ const getAppointmentsByStatus = async (req, res) => {
   }
 };
 
+// @desc    Get appointments for a client by email + phone
+// @route   GET /api/appointments/my?email=...&phone=...
+// @access  Public
+const getMyAppointments = async (req, res) => {
+  try {
+    const email = String(req.query.email || '').trim().toLowerCase();
+    const phone = String(req.query.phone || '').trim();
+
+    if (!email || !phone) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and phone are required'
+      });
+    }
+
+    const appointments = await Appointment.find({
+      email,
+      phone
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: appointments.length,
+      data: appointments
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllAppointments,
   getAppointmentById,
@@ -236,4 +269,5 @@ module.exports = {
   deleteAppointment,
   getAppointmentsByDate,
   getAppointmentsByStatus,
+  getMyAppointments,
 };

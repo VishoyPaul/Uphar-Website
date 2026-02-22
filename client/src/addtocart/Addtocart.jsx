@@ -3,7 +3,7 @@ import Navbar from "../components/common/Navbar";
 import FadingLoader from "../components/loader/FadingLoader";
 import Footer from "../components/footer/Footer";
 const Addtocart = () => {
-  const [cartItems, setCartItems] = React.useState([]);
+  const [cartItems] = React.useState([]);
   return (
     <div>
       <Navbar />

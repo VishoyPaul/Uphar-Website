@@ -1,11 +1,16 @@
 import React from "react";
 import { FiShoppingCart } from "react-icons/fi";
-import { useCart } from "../../context/CartContext";
+import useCart from "../../hooks/useCart";
+import { useNavigate } from "react-router-dom";
+import useAlert from "../../hooks/useAlert";
 
 const HearingAidCard = ({ _id, image, brand, model, color, price, description }) => {
   const { addToCart } = useCart();
+  const { showAlert } = useAlert();
+  const navigate = useNavigate();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (event) => {
+    event.stopPropagation();
     addToCart({
       _id,
       image,
@@ -15,14 +20,26 @@ const HearingAidCard = ({ _id, image, brand, model, color, price, description })
       price,
       description,
     });
+    showAlert({
+      type: 'success',
+      title: 'Item added to cart',
+      message: `${brand} ${model} has been added.`,
+    });
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full">
+    <div
+      className="bg-white rounded-2xl shadow-lg overflow-hidden w-full cursor-pointer"
+      onClick={() => navigate(`/hearing-aids/${_id}`)}
+    >
 
       <div className="relative bg-gradient-to-br from-purple-50 to-pink-50 p-5 sm:p-6">
 
-        <button className="absolute top-3 right-3 bg-white w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow">
+        <button
+          type="button"
+          onClick={(event) => event.stopPropagation()}
+          className="absolute top-3 right-3 bg-white w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow"
+        >
           ♡
         </button>
 

@@ -125,7 +125,11 @@ out/
 
 # Gatsby (if using)
 .cache/
-public/
+public/*
+!public/logo.png
+!public/vite.svg
+!public/icons/
+!public/icons/icons.js
 
 # Analytics
 .vercel

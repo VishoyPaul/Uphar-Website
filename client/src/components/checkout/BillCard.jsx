@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 
-const BillCard = ({ subtotal = 0, shipping = 499, discount = 0 }) => {
+const BillCard = ({
+  subtotal = 0,
+  shipping = 499,
+  discount = 0,
+  actionLabel = 'Place Order',
+  onActionClick,
+  actionDisabled = false,
+}) => {
 
   const [selectedPayment, setSelectedPayment] = useState('');
   const total = subtotal + shipping - discount;
@@ -73,8 +80,13 @@ const BillCard = ({ subtotal = 0, shipping = 499, discount = 0 }) => {
             </button>
           ))}
         </div>
-        <button className="w-full mt-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 rounded-2xl hover:from-pink-600 hover:to-purple-700 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
-          Place Order →
+        <button
+          type="button"
+          onClick={onActionClick}
+          disabled={actionDisabled}
+          className="w-full mt-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 rounded-2xl hover:from-pink-600 hover:to-purple-700 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {actionLabel} →
         </button>
 
         <p className="text-center text-gray-400 text-xs">

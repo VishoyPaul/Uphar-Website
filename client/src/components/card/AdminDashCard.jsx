@@ -1,53 +1,68 @@
-import React, { useEffect, useState } from 'react'
-import AdminDetailCard from './AdminDetailCard'
-import { getAppointments } from '../../api/api'
+import React, { useEffect, useState } from 'react';
+import AdminDetailCard from './AdminDetailCard';
+import { getAppointments, getHearingAids } from '../../api/api';
 
-function AdminDashCard() {
+function AdminDashCard({ refreshKey = 0 }) {
   const [appointmentsCount, setAppointmentsCount] = useState(0);
-  const [todayCount, setTodayCount] = useState(0);
+  const [todayAppointmentsCount, setTodayAppointmentsCount] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [lowStockCount, setLowStockCount] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
 
-    const fetchAppointments = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const response = await getAppointments();
+        const [appointmentsResponse, hearingAidsResponse] = await Promise.all([
+          getAppointments(),
+          getHearingAids(),
+        ]);
+
         if (!isMounted) return;
-        const appointments = response?.data || [];
+
+        const appointments = appointmentsResponse?.data || [];
+        const hearingAids = hearingAidsResponse?.data || [];
+
         setAppointmentsCount(appointments.length);
+        setTotalProducts(hearingAids.length);
 
         const today = new Date();
         const todayKey = today.toISOString().split('T')[0];
-        const todayTotal = appointments.filter((appt) => {
-          if (!appt?.preferredDate) return false;
-          const apptKey = new Date(appt.preferredDate).toISOString().split('T')[0];
-          return apptKey === todayKey;
+
+        const todayTotal = appointments.filter((item) => {
+          if (!item?.preferredDate) return false;
+          const itemDate = new Date(item.preferredDate);
+          if (Number.isNaN(itemDate.getTime())) return false;
+          return itemDate.toISOString().split('T')[0] === todayKey;
         }).length;
-        setTodayCount(todayTotal);
-      } catch (error) {
-        if (isMounted) {
-          setAppointmentsCount(0);
-          setTodayCount(0);
-        }
+        setTodayAppointmentsCount(todayTotal);
+
+        const lowStockTotal = hearingAids.filter((item) => Number(item.stock) < 10).length;
+        setLowStockCount(lowStockTotal);
+      } catch {
+        if (!isMounted) return;
+        setAppointmentsCount(0);
+        setTodayAppointmentsCount(0);
+        setTotalProducts(0);
+        setLowStockCount(0);
       }
     };
 
-    fetchAppointments();
+    fetchDashboardData();
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [refreshKey]);
 
   return (
     <div className='flex flex-wrap gap-4 w-full p-4 justify-center'>
-        <AdminDetailCard details='2000' title='Total Sales'/>
-        <AdminDetailCard details='12' title='Pending Orders'/>
-        <AdminDetailCard details={appointmentsCount} title='Total Appointments'/>
-        <AdminDetailCard details={todayCount} title='Appointments Today'/>
-             
+      <AdminDetailCard details={totalProducts} title='Total Products'/>
+      <AdminDetailCard details={lowStockCount} title='Low Stock Items'/>
+      <AdminDetailCard details={appointmentsCount} title='Total Appointments'/>
+      <AdminDetailCard details={todayAppointmentsCount} title='Appointments Today'/>
     </div>
-  )
+  );
 }
 
-export default AdminDashCard
+export default AdminDashCard;
