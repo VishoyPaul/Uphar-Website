@@ -40,6 +40,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve react app static files
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
 app.use('/api/auth', authRoute);
 app.use('/api/hearingaids', hearingAidsRoute);
 app.use('/api/appointments', appointmentsRoute);
@@ -47,9 +50,9 @@ app.use('/api/imgupload', imageUploadRoute);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+// Fallback to serve index.html for client-side routing (must be after API routes)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 // error handler
